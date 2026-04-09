@@ -3,121 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBT Simpel - Ujian Online</title>
-    <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { max-width: 700px; width: 100%; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: var(--primary); }
-        .form-group { margin-bottom: 15px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .soal-card { border-bottom: 1px solid #eee; padding: 20px 0; }
-        .pilihan { margin: 10px 0; cursor: pointer; display: block; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn:hover { background: var(--accent); }
-        #area-ujian { display: none; }
-        .hidden { display: none; }
-    </style>
+    <title>Sistem CBT Terintegrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen">
 
-<div class="container">
-    <h1>CBT Online</h1>
-    
-    <div id="area-login">
-        <div class="form-group">
-            <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" required>
+    <div id="page-login" class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-xl shadow-md w-96">
+            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Login CBT</h2>
+            <input type="text" id="user" placeholder="Username" class="w-full p-2 mb-4 border rounded">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-2 mb-4 border rounded">
+            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Masuk</button>
         </div>
-        <div class="form-group">
-            <input type="text" id="kelas" placeholder="Kelas (Contoh: 9A)" required>
-        </div>
-        <button class="btn" onclick="mulaiUjian()">Mulai Ujian</button>
     </div>
 
-    <div id="area-ujian">
-        <div id="konten-soal">
-            <p>Memuat soal...</p>
+    <div id="page-admin" class="hidden p-6">
+        <nav class="bg-white p-4 rounded-lg shadow mb-6 flex justify-between items-center">
+            <h2 class="font-bold text-xl">Admin Dashboard</h2>
+            <button onclick="location.reload()" class="text-red-500">Logout</button>
+        </nav>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded shadow">
+                <h3 class="font-bold mb-4">Manajemen Soal</h3>
+                <button class="bg-green-500 text-white px-4 py-2 rounded text-sm">Upload Excel Soal</button>
+            </div>
+            <div class="bg-white p-6 rounded shadow">
+                <h3 class="font-bold mb-4">Hasil Ujian</h3>
+                <button onclick="downloadHasil()" class="bg-blue-500 text-white px-4 py-2 rounded text-sm">Unduh CSV Hasil</button>
+            </div>
+            <div class="bg-white p-6 rounded shadow">
+                <h3 class="font-bold mb-4">Data Peserta</h3>
+                <p id="stat-peserta">Memuat...</p>
+            </div>
         </div>
-        <button class="btn" onclick="submitJawaban()">Kirim Jawaban</button>
     </div>
 
-    <div id="area-hasil" class="hidden">
-        <h2>Terima Kasih!</h2>
-        <p id="pesan-skor"></p>
+    <div id="page-siswa" class="hidden p-6">
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow">
+            <h2 id="welcome-msg" class="text-xl font-bold mb-4">Halo, Siswa</h2>
+            <div id="list-ujian" class="space-y-4">
+                <p>Mencari jadwal ujian aktif...</p>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyPPKtOMbMGXzAQlU5pQ6_pTZSqStupV481GpJnLI3fmqrCUWTtYC316Rpbi9KHjRfdHA/exec"; // <--- GANTI DENGAN URL GAS ANDA
-    let daftarSoal = [];
-    let jawabanSiswa = {};
+    <div id="page-test" class="hidden p-6">
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+            <div class="flex justify-between border-b pb-4 mb-4">
+                <h3 id="test-title" class="font-bold">Ujian</h3>
+                <div id="timer" class="text-red-600 font-mono text-xl">00:00</div>
+            </div>
+            <div id="soal-container"></div>
+            <button onclick="submitTest()" class="mt-6 w-full bg-green-600 text-white py-3 rounded font-bold">KIRIM JAWABAN</button>
+        </div>
+    </div>
 
-    async function mulaiUjian() {
-        const nama = document.getElementById('nama').value;
-        const kelas = document.getElementById('kelas').value;
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyPPKtOMbMGXzAQlU5pQ6_pTZSqStupV481GpJnLI3fmqrCUWTtYC316Rpbi9KHjRfdHA/exec"; 
+        let userNow = {};
+        let currentSoal = [];
+        let jawabanSiswa = {};
+        let activeKode = "";
 
-        if (!nama || !kelas) return alert("Isi nama dan kelas!");
-
-        document.getElementById('area-login').classList.add('hidden');
-        document.getElementById('area-ujian').style.display = 'block';
-
-        try {
-            const response = await fetch(GAS_URL);
-            daftarSoal = await response.json();
-            tampilkanSoal();
-        } catch (e) {
-            alert("Gagal mengambil soal. Pastikan URL GAS benar dan sudah di-deploy.");
+        async function api(data) {
+            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(data) });
+            return res.json();
         }
-    }
 
-    function tampilkanSoal() {
-        const wadah = document.getElementById('konten-soal');
-        wadah.innerHTML = "";
-
-        daftarSoal.forEach((s, index) => {
-            const div = document.createElement('div');
-            div.className = 'soal-card';
-            div.innerHTML = `
-                <p><strong>${index + 1}. ${s.Pertanyaan}</strong></p>
-                <label class="pilihan"><input type="radio" name="soal${s.No}" value="A" onchange="pilihJawaban('${s.No}', 'A')"> A. ${s["Opsi A"]}</label>
-                <label class="pilihan"><input type="radio" name="soal${s.No}" value="B" onchange="pilihJawaban('${s.No}', 'B')"> B. ${s["Opsi B"]}</label>
-                <label class="pilihan"><input type="radio" name="soal${s.No}" value="C" onchange="pilihanJawaban('${s.No}', 'C')"> C. ${s["Opsi C"]}</label>
-                <label class="pilihan"><input type="radio" name="soal${s.No}" value="D" onchange="pilihJawaban('${s.No}', 'D')"> D. ${s["Opsi D"]}</label>
-            `;
-            wadah.appendChild(div);
-        });
-    }
-
-    function pilihJawaban(noSoal, pilihan) {
-        jawabanSiswa[noSoal] = pilihan;
-    }
-
-    async function submitJawaban() {
-        if (!confirm("Yakin ingin mengirim jawaban?")) return;
-
-        const dataKirim = {
-            nama: document.getElementById('nama').value,
-            kelas: document.getElementById('kelas').value,
-            jawaban: jawabanSiswa
-        };
-
-        document.getElementById('area-ujian').innerHTML = "<p>Sedang mengirim dan menghitung skor...</p>";
-
-        try {
-            const res = await fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify(dataKirim)
-            });
-            const hasil = await res.json();
+        async function handleLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const res = await api({ action: "login", username: u, password: p });
             
-            document.getElementById('area-ujian').style.display = 'none';
-            document.getElementById('area-hasil').classList.remove('hidden');
-            document.getElementById('pesan-skor').innerText = `Skor Anda: ${hasil.skor}`;
-        } catch (e) {
-            alert("Terjadi kesalahan saat mengirim jawaban.");
+            if (res.status === "success") {
+                userNow = res;
+                document.getElementById('page-login').classList.add('hidden');
+                if (res.role === 'admin') showAdmin();
+                else showSiswa();
+            } else alert(res.message);
         }
-    }
-</script>
 
+        async function showSiswa() {
+            document.getElementById('page-siswa').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = `Selamat Datang, ${userNow.nama}`;
+            const res = await api({ action: "getJadwal" });
+            const container = document.getElementById('list-ujian');
+            container.innerHTML = res.data.map(j => `
+                <div class="p-4 border rounded flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">${j.nama}</p>
+                        <p class="text-sm text-gray-500">${j.durasi} Menit</p>
+                    </div>
+                    <button onclick="startUjian('${j.kode}', '${j.nama}', ${j.durasi})" class="bg-blue-600 text-white px-4 py-2 rounded">Mulai</button>
+                </div>
+            `).join('');
+        }
+
+        async function startUjian(kode, nama, durasi) {
+            activeKode = kode;
+            const res = await api({ action: "getSoal", kodeSoal: kode });
+            currentSoal = res.data;
+            document.getElementById('page-siswa').classList.add('hidden');
+            document.getElementById('page-test').classList.remove('hidden');
+            document.getElementById('test-title').innerText = nama;
+            
+            // Render Soal
+            document.getElementById('soal-container').innerHTML = currentSoal.map((s, i) => `
+                <div class="mb-6 border-b pb-4">
+                    <p class="font-medium mb-2">${i+1}. ${s.tanya}</p>
+                    ${['a','b','c','d'].map(opt => `
+                        <label class="block p-2 hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="q${s.no}" value="${opt.toUpperCase()}" onchange="jawabanSiswa['${s.no}']='${opt.toUpperCase()}'"> 
+                            ${opt.toUpperCase()}. ${s[opt]}
+                        </label>
+                    `).join('')}
+                </div>
+            `).join('');
+
+            // Simple Timer
+            let time = durasi * 60;
+            const interval = setInterval(() => {
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                if (time <= 0) { clearInterval(interval); submitTest(); }
+                time--;
+            }, 1000);
+        }
+
+        async function submitTest() {
+            const res = await api({
+                action: "submitUjian",
+                nama: userNow.nama,
+                kelas: userNow.kelas,
+                kodeSoal: activeKode,
+                jawaban: jawabanSiswa
+            });
+            alert("Ujian Selesai! Skor Anda: " + res.skor);
+            location.reload();
+        }
+
+        async function showAdmin() {
+            document.getElementById('page-admin').classList.remove('hidden');
+            const res = await api({ action: "getAdminData" });
+            document.getElementById('stat-peserta').innerText = `Total Peserta: ${res.peserta.length - 1}`;
+        }
+
+        function downloadHasil() {
+            // Logika sederhana export CSV bisa ditambahkan di sini
+            alert("Fitur download sedang disiapkan.");
+        }
+    </script>
 </body>
 </html>
