@@ -3,59 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem CBT Terintegrasi</title>
+    <title>CBT Pro - Fast & Elegant</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen font-sans">
 
-    <div id="page-login" class="flex items-center justify-center min-h-screen">
-        <div class="bg-white p-8 rounded-xl shadow-md w-96">
-            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Login CBT</h2>
-            <input type="text" id="user" placeholder="Username" class="w-full p-2 mb-4 border rounded">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-2 mb-4 border rounded">
-            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Masuk</button>
-        </div>
+    <div id="loader" class="hidden fixed inset-0 bg-white/80 z-50 flex flex-col items-center justify-center">
+        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-4 font-medium text-blue-600">Memproses...</p>
     </div>
 
-    <div id="page-admin" class="hidden p-6">
-        <nav class="bg-white p-4 rounded-lg shadow mb-6 flex justify-between items-center">
-            <h2 class="font-bold text-xl">Admin Dashboard</h2>
-            <button onclick="location.reload()" class="text-red-500">Logout</button>
-        </nav>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded shadow">
-                <h3 class="font-bold mb-4">Manajemen Soal</h3>
-                <button class="bg-green-500 text-white px-4 py-2 rounded text-sm">Upload Excel Soal</button>
+    <div id="page-login" class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-slate-800">CBT Online</h2>
+                <p class="text-slate-500 mt-2">Silakan login untuk memulai ujian</p>
             </div>
-            <div class="bg-white p-6 rounded shadow">
-                <h3 class="font-bold mb-4">Hasil Ujian</h3>
-                <button onclick="downloadHasil()" class="bg-blue-500 text-white px-4 py-2 rounded text-sm">Unduh CSV Hasil</button>
-            </div>
-            <div class="bg-white p-6 rounded shadow">
-                <h3 class="font-bold mb-4">Data Peserta</h3>
-                <p id="stat-peserta">Memuat...</p>
+            <div class="space-y-4">
+                <input type="text" id="user" placeholder="Username" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                <input type="password" id="pass" placeholder="Password" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                <button id="btn-login" onclick="handleLogin()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200">Masuk Sekarang</button>
             </div>
         </div>
     </div>
 
-    <div id="page-siswa" class="hidden p-6">
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow">
-            <h2 id="welcome-msg" class="text-xl font-bold mb-4">Halo, Siswa</h2>
-            <div id="list-ujian" class="space-y-4">
-                <p>Mencari jadwal ujian aktif...</p>
+    <div id="page-siswa" class="hidden p-6 max-w-4xl mx-auto fade-in">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 id="welcome-msg" class="text-2xl font-bold text-slate-800">Halo, Siswa</h2>
+                <p class="text-slate-500">Pilih jadwal ujian yang tersedia</p>
+            </div>
+            <button onclick="location.reload()" class="bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium">Logout</button>
+        </header>
+        <div id="list-ujian" class="grid gap-4">
+            <div class="h-20 loading-shimmer rounded-xl"></div>
+            <div class="h-20 loading-shimmer rounded-xl"></div>
+        </div>
+    </div>
+
+    <div id="page-test" class="hidden p-4 md:p-8 fade-in">
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-blue-600 p-6 text-white flex justify-between items-center sticky top-0">
+                <div>
+                    <h3 id="test-title" class="font-bold text-lg">Ujian</h3>
+                    <p id="user-info" class="text-blue-100 text-sm"></p>
+                </div>
+                <div id="timer" class="bg-white/20 px-4 py-2 rounded-lg font-mono text-xl font-bold">00:00</div>
+            </div>
+            <div id="soal-container" class="p-6 space-y-8"></div>
+            <div class="p-6 bg-slate-50 border-t">
+                <button onclick="submitTest()" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all">Kirim Jawaban Selesai</button>
             </div>
         </div>
     </div>
 
-    <div id="page-test" class="hidden p-6">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
-            <div class="flex justify-between border-b pb-4 mb-4">
-                <h3 id="test-title" class="font-bold">Ujian</h3>
-                <div id="timer" class="text-red-600 font-mono text-xl">00:00</div>
-            </div>
-            <div id="soal-container"></div>
-            <button onclick="submitTest()" class="mt-6 w-full bg-green-600 text-white py-3 rounded font-bold">KIRIM JAWABAN</button>
+    <div id="page-admin" class="hidden p-6 fade-in">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Admin Panel</h1>
+            <button onclick="location.reload()" class="text-red-500">Keluar</button>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="admin-stats">
+             </div>
     </div>
 
     <script>
@@ -65,6 +79,8 @@
         let jawabanSiswa = {};
         let activeKode = "";
 
+        const loader = document.getElementById('loader');
+
         async function api(data) {
             const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(data) });
             return res.json();
@@ -73,14 +89,19 @@
         async function handleLogin() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            const res = await api({ action: "login", username: u, password: p });
-            
-            if (res.status === "success") {
-                userNow = res;
-                document.getElementById('page-login').classList.add('hidden');
-                if (res.role === 'admin') showAdmin();
-                else showSiswa();
-            } else alert(res.message);
+            if(!u || !p) return alert("Isi data!");
+
+            loader.classList.remove('hidden');
+            try {
+                const res = await api({ action: "login", username: u, password: p });
+                if (res.status === "success") {
+                    userNow = res;
+                    document.getElementById('page-login').classList.add('hidden');
+                    if (res.role === 'admin') showAdmin();
+                    else showSiswa();
+                } else alert(res.message);
+            } catch(e) { alert("Koneksi gagal"); }
+            loader.classList.add('hidden');
         }
 
         async function showSiswa() {
@@ -88,50 +109,71 @@
             document.getElementById('welcome-msg').innerText = `Selamat Datang, ${userNow.nama}`;
             const res = await api({ action: "getJadwal" });
             const container = document.getElementById('list-ujian');
+            
+            if(res.data.length === 0) {
+                container.innerHTML = `<p class="text-center p-8 bg-white rounded-xl text-slate-400">Belum ada ujian aktif.</p>`;
+                return;
+            }
+
             container.innerHTML = res.data.map(j => `
-                <div class="p-4 border rounded flex justify-between items-center">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-md transition-shadow">
                     <div>
-                        <p class="font-bold">${j.nama}</p>
-                        <p class="text-sm text-gray-500">${j.durasi} Menit</p>
+                        <p class="font-bold text-slate-800 text-lg">${j.nama}</p>
+                        <span class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-bold">${j.durasi} Menit</span>
                     </div>
-                    <button onclick="startUjian('${j.kode}', '${j.nama}', ${j.durasi})" class="bg-blue-600 text-white px-4 py-2 rounded">Mulai</button>
+                    <button onclick="startUjian('${j.kode}', '${j.nama}', ${j.durasi})" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors">Mulai</button>
                 </div>
             `).join('');
         }
 
         async function startUjian(kode, nama, durasi) {
+            if(!confirm(`Mulai ujian ${nama}?`)) return;
+            loader.classList.remove('hidden');
             activeKode = kode;
             const res = await api({ action: "getSoal", kodeSoal: kode });
             currentSoal = res.data;
+            
             document.getElementById('page-siswa').classList.add('hidden');
             document.getElementById('page-test').classList.remove('hidden');
             document.getElementById('test-title').innerText = nama;
+            document.getElementById('user-info').innerText = `${userNow.nama} | ${userNow.kelas}`;
             
-            // Render Soal
+            renderSoal();
+            startTimer(durasi);
+            loader.classList.add('hidden');
+        }
+
+        function renderSoal() {
             document.getElementById('soal-container').innerHTML = currentSoal.map((s, i) => `
-                <div class="mb-6 border-b pb-4">
-                    <p class="font-medium mb-2">${i+1}. ${s.tanya}</p>
-                    ${['a','b','c','d'].map(opt => `
-                        <label class="block p-2 hover:bg-gray-50 cursor-pointer">
-                            <input type="radio" name="q${s.no}" value="${opt.toUpperCase()}" onchange="jawabanSiswa['${s.no}']='${opt.toUpperCase()}'"> 
-                            ${opt.toUpperCase()}. ${s[opt]}
-                        </label>
-                    `).join('')}
+                <div class="fade-in">
+                    <p class="font-bold text-slate-800 text-lg mb-4"><span class="text-blue-600">No ${i+1}.</span> ${s.tanya}</p>
+                    <div class="grid gap-3">
+                        ${['a','b','c','d'].map(opt => `
+                            <label class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                                <input type="radio" name="q${s.no}" value="${opt.toUpperCase()}" 
+                                    onchange="jawabanSiswa['${s.no}']='${opt.toUpperCase()}'" class="w-5 h-5 text-blue-600">
+                                <span class="ml-4 text-slate-700 group-hover:text-blue-700 font-medium">${opt.toUpperCase()}. ${s[opt]}</span>
+                            </label>
+                        `).join('')}
+                    </div>
                 </div>
             `).join('');
+        }
 
-            // Simple Timer
-            let time = durasi * 60;
+        function startTimer(min) {
+            let time = min * 60;
+            const el = document.getElementById('timer');
             const interval = setInterval(() => {
                 let m = Math.floor(time / 60);
                 let s = time % 60;
-                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                el.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
                 if (time <= 0) { clearInterval(interval); submitTest(); }
                 time--;
             }, 1000);
         }
 
         async function submitTest() {
+            loader.classList.remove('hidden');
             const res = await api({
                 action: "submitUjian",
                 nama: userNow.nama,
@@ -139,19 +181,28 @@
                 kodeSoal: activeKode,
                 jawaban: jawabanSiswa
             });
-            alert("Ujian Selesai! Skor Anda: " + res.skor);
+            alert("Hasil Terkirim! Skor: " + res.skor);
             location.reload();
         }
 
         async function showAdmin() {
             document.getElementById('page-admin').classList.remove('hidden');
             const res = await api({ action: "getAdminData" });
-            document.getElementById('stat-peserta').innerText = `Total Peserta: ${res.peserta.length - 1}`;
-        }
-
-        function downloadHasil() {
-            // Logika sederhana export CSV bisa ditambahkan di sini
-            alert("Fitur download sedang disiapkan.");
+            const stats = document.getElementById('admin-stats');
+            stats.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <p class="text-slate-500 text-sm">Total Soal</p>
+                    <p class="text-3xl font-bold">${res.soal.length - 1}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-emerald-500">
+                    <p class="text-slate-500 text-sm">Peserta Ujian</p>
+                    <p class="text-3xl font-bold">${res.peserta.length - 1}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                    <p class="text-slate-500 text-sm">Hasil Masuk</p>
+                    <p class="text-3xl font-bold">${res.hasil.length - 1}</p>
+                </div>
+            `;
         }
     </script>
 </body>
