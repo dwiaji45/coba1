@@ -110,10 +110,10 @@
         <div class="login-box">
             <div class="login-header">
                 <a href="?page=admin" target="_top" title="Klik untuk ke Admin Panel" style="text-decoration:none;">
-                    <img src="https://lh3.googleusercontent.com/d/196-yYlDwDc-tUVDTslzPAlBWTmf4ZbWg" alt="Logo CBT" class="logo-img">
+                    <img src="https://lh3.googleusercontent.com/d/15vTWgoEux7wfHY8542g4mLnS2DM-noGm" alt="Logo CBT" class="logo-img">
                 </a>
-                <h2>CBT DUA DIMENSI</h2>
-                <p style="margin:5px 0 0; color:#777;">Mitra Belajar Siswa Meraih Prestasi</p>
+                <h2 id="date_time">Loading waktu...</h2>
+                <p style="margin:5px 0 0; color:#777;"></p>
             </div>
             <select id="selKelas" class="form-control" onchange="filterUjian()"><option value="">Pilih Kelas</option></select>
             <select id="selUjian" class="form-control" disabled onchange="cekTokenOtomatis()"><option value="">Pilih Ujian</option></select>
@@ -606,6 +606,34 @@ function submitExam(forced) {
         } else { isSubmitting = false; Swal.fire('Gagal', res.message, 'error'); }
     });
 }
+
+function updateTime() {
+    const now = new Date();
+    
+    // Daftar nama bulan dalam format singkat
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    // Mengambil data waktu
+    const date = now.getDate().toString().padStart(2, '0');
+    const month = months[now.getMonth()];
+    const year = now.getFullYear().toString().slice(-2); // Ambil 2 angka terakhir tahun
+    
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    // Menggabungkan menjadi format: DD/Mon/YY HH:mm:ss
+    const timeString = `${date}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    // Memasukkan teks ke dalam elemen HTML
+    document.getElementById('date_time').innerHTML = timeString;
+}
+
+// Menjalankan fungsi setiap 1 detik (1000 milidetik)
+setInterval(updateTime, 1000);
+
+// Panggil sekali di awal agar tidak menunggu 1 detik pertama
+updateTime();
 </script>
 </body>
 </html>
