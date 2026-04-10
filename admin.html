@@ -4,7 +4,7 @@
     <base target="_top">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - UJIAN CBT</title>
+    <title>Admin DD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/d/196-yYlDwDc-tUVDTslzPAlBWTmf4ZbWg">
@@ -27,7 +27,7 @@
             cursor: pointer;
         }
         .sidebar a:hover, .sidebar a.active {
-            background: #0d6efd; color: #fff; border-left: 4px solid #fff;
+            background: #0e58a6; color: #fff; border-left: 4px solid #fff;
         }
         .sidebar i { width: 25px; text-align: center; margin-right: 10px; }
         
@@ -80,7 +80,7 @@
         .score-input { width: 100px; }
 
         /* --- STYLES FOR PREVIEW SOAL --- */
-        :root { --primary: #0d6efd; --success: #198754; }
+        :root { --primary: #0e58a6; --success: #198754; }
         .teks-soal { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; } 
         .teks-soal img { max-width: 100% !important; height: auto !important; border-radius: 5px; border: 1px solid #ddd; display: block; margin: 10px 0; }
         
@@ -744,7 +744,7 @@ function generateSoalHTML(data, indexLabel) {
     const q = { id: data[0], tipe: data[1], kd: data[2], soal: parseImgTags(data[3]), opsi: opsiArr };
     
     let h = `<div class="soal-card-preview">
-    <div style="border-bottom:2px solid #eee; margin-bottom:15px; padding-bottom:10px; font-weight:bold; color:#0d6efd; display:flex; justify-content:space-between;">
+    <div style="border-bottom:2px solid #eee; margin-bottom:15px; padding-bottom:10px; font-weight:bold; color:#0e58a6; display:flex; justify-content:space-between;">
     <span>Soal ${indexLabel} (${q.tipe})</span><span class="badge bg-secondary">KD: ${q.kd || '-'}</span></div>
     <div class="teks-soal">${q.soal}</div>`;
     
@@ -839,7 +839,7 @@ function clickJodohPrev(qId, itemId, side) {
                     const cRect = container.getBoundingClientRect(); const rL = elL.getBoundingClientRect(); const rR = elR.getBoundingClientRect();
                     const x1 = rL.right - cRect.left - 6; const y1 = rL.top + rL.height/2 - cRect.top;
                     const x2 = rR.left - cRect.left + 6; const y2 = rR.top + rR.height/2 - cRect.top;
-                    svg.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:#0d6efd;stroke-width:3" />`;
+                    svg.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:#0e58a6;stroke-width:3" />`;
                     elL.classList.remove('selected'); elL.classList.add('matched'); elR.classList.add('matched'); selectedLeftId = null;
                 }
             }
@@ -1153,7 +1153,7 @@ function cetakRekap(kodeUjian, titleUjian, kelas) {
                     if(jwbUser.includes('[GAMBAR]')) jwbUser = '[Gbr]';
                     let knc = String(r[i+1]).substring(0,15);
                     let color = (jwbUser.toUpperCase() === knc.toUpperCase()) ? '#198754' : '#dc3545';
-                    if(jwbUser === '[Gbr]') color = '#0d6efd';
+                    if(jwbUser === '[Gbr]') color = '#0e58a6';
                     html += `<td style="color:${color}; text-align:center;">${jwbUser}</td>`;
                 }
                 html += `</tr>`;
