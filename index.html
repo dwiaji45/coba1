@@ -264,7 +264,7 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 
     <div class="modal-overlay" id="mobileNavModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="toggleNavModal()">&times;</span>
+            <span class="close-modal" onclick="toggleNavModal()">×</span>
             <div style="text-align:center; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Daftar Soal</div>
             <div class="nav-grid" id="navGridMobile"></div>
             <div style="margin-top:15px; font-size:0.8rem; color:#dc3545; text-align:center;">Jaga kejujuran dalam mengerjakan ujian.</div>
@@ -486,10 +486,19 @@ function handleFullscreenChange() {
 
 function toggleNavModal() { const modal = document.getElementById('mobileNavModal'); modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex'; }
 
+function parseImgTags(html) {
+    if (!html) return '';
+    return html.replace(/<img\s+id=([a-zA-Z0-9_-]+)>/g, (match, id) => {
+        return `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w800">`;
+    });
+}
+
 function renderSoal(idx) {
     currIdx = idx;
     const q = examData[idx]; const div = document.getElementById('soalContainer');
-    let h = `<div class="nomor-soal"><span>Soal No. ${idx+1}</span> <span>${q.tipe}</span></div><div class="teks-soal">${q.soal}</div>`;
+    
+    // Ganti label menjadi ID Soal dan terapkan parseImgTags pada Teks Utama
+    let h = `<div class="nomor-soal"><span>Soal No. ${q.id || (idx+1)}</span> <span>${q.tipe}</span></div><div class="teks-soal">${parseImgTags(q.soal)}</div>`;
 
     if (q.tipe === 'JODOHKAN') {
         h += `<div class="jodoh-container" id="jodohArea_${q.id}"><svg class="jodoh-svg" id="svg_${q.id}"></svg><div class="jodoh-col" id="colLeft_${q.id}"></div><div class="jodoh-col" id="colRight_${q.id}"></div></div><div style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">Klik butir Kiri lalu klik butir Kanan untuk menghubungkan.</div>`;
@@ -499,7 +508,7 @@ function renderSoal(idx) {
         q.opsi.forEach((opt, i) => {
             if(opt) {
                 const k = String.fromCharCode(65+i); const chk = (answers[q.id] === k) ? 'checked' : '';
-                h += `<label class="opsi-item"><input type="radio" name="g_${idx}" ${chk} onchange="saveAns('${q.id}','${k}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${k}.</b> <div class="opsi-content">${opt}</div></div></label>`;
+                h += `<label class="opsi-item"><input type="radio" name="g_${idx}" ${chk} onchange="saveAns('${q.id}','${k}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${k}.</b> <div class="opsi-content">${parseImgTags(opt)}</div></div></label>`;
             }
         });
         h += `</div>`;
@@ -508,7 +517,7 @@ function renderSoal(idx) {
         q.opsi.forEach((opt, i) => {
             if(opt) {
                 const k = String.fromCharCode(65+i); const chk = curr.includes(k) ? 'checked' : '';
-                h += `<label class="opsi-item"><input type="checkbox" ${chk} onchange="saveMcma('${q.id}','${k}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${k}.</b> <div class="opsi-content">${opt}</div></div></label>`;
+                h += `<label class="opsi-item"><input type="checkbox" ${chk} onchange="saveMcma('${q.id}','${k}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${k}.</b> <div class="opsi-content">${parseImgTags(opt)}</div></div></label>`;
             }
         });
         h += `</div>`;
@@ -518,7 +527,7 @@ function renderSoal(idx) {
             if(opt) {
                 const k = String.fromCharCode(65+i); const val = curr[k] || '';
                 const stB = val==='Benar'?'background:var(--success);color:white':''; const stS = val==='Salah'?'background:#dc3545;color:white':'';
-                h += `<div style="display:flex; justify-content:space-between; padding:10px; border:1px solid #eee; align-items:center;"><div class="opsi-content">${opt}</div><div style="min-width: 120px; text-align:right;"><button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stB}" onclick="saveBs('${q.id}','${k}','Benar')">Benar</button> <button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stS}" onclick="saveBs('${q.id}','${k}','Salah')">Salah</button></div></div>`;
+                h += `<div style="display:flex; justify-content:space-between; padding:10px; border:1px solid #eee; align-items:center;"><div class="opsi-content">${parseImgTags(opt)}</div><div style="min-width: 120px; text-align:right;"><button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stB}" onclick="saveBs('${q.id}','${k}','Benar')">Benar</button> <button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stS}" onclick="saveBs('${q.id}','${k}','Salah')">Salah</button></div></div>`;
             }
         });
         h += `</div>`;
@@ -629,7 +638,11 @@ function renderNav() {
 }
 
 function createNavButton(q, i) {
-    const d = document.createElement('div'); d.className = 'nav-btn'; d.innerText = i+1;
+    const d = document.createElement('div'); 
+    d.className = 'nav-btn'; 
+    d.innerText = q.id || (i+1); 
+    d.dataset.index = i; 
+    
     const ans = answers[q.id]; let fill = false;
     if(ans) {
         if(Array.isArray(ans)) fill = ans.length > 0;
@@ -638,10 +651,20 @@ function createNavButton(q, i) {
         else if(ans && typeof ans !== 'object') fill = true;
     }
     if(fill) d.classList.add('filled');
-    if(i === currIdx) d.classList.add('active'); d.onclick = () => renderSoal(i); return d;
+    if(i === currIdx) d.classList.add('active'); 
+    d.onclick = () => renderSoal(i); 
+    return d;
 }
 
-function updateNavActive() { document.querySelectorAll('.nav-btn').forEach((b) => { b.classList.remove('active'); if(parseInt(b.innerText) === currIdx + 1) { b.classList.add('active'); } }); }
+function updateNavActive() { 
+    document.querySelectorAll('.nav-btn').forEach((b) => { 
+        b.classList.remove('active'); 
+        if(parseInt(b.dataset.index) === currIdx) { 
+            b.classList.add('active'); 
+        } 
+    }); 
+}
+
 function move(d) { const n = currIdx + d; if(n >= 0 && n < examData.length) renderSoal(n); }
 
 function startTimer(sec) {
