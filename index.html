@@ -317,7 +317,21 @@ function initData(res) {
     if(res.status !== 'ok') return Swal.fire('Error', res.message, 'error');
     const selKelas = document.getElementById('selKelas');
     selKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
-    res.kelas.forEach(k => { let opt = document.createElement('option'); opt.value = k; opt.text = k; selKelas.add(opt); });
+    
+    // --- TAMBAHAN KODE SORTING ---
+    // Mengurutkan array kelas dari kecil ke besar (mendukung teks campuran seperti "10 MIPA")
+    let kelasTerurut = res.kelas.sort((a, b) => {
+        return a.toString().localeCompare(b.toString(), undefined, { numeric: true, sensitivity: 'base' });
+    });
+
+    // Looping data yang sudah diurutkan
+    kelasTerurut.forEach(k => { 
+        let opt = document.createElement('option'); 
+        opt.value = k; 
+        opt.text = k; 
+        selKelas.add(opt); 
+    });
+    
     allExams = res.ujian;
 }
 
