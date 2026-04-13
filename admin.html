@@ -61,7 +61,6 @@
         /* Fix for CKEditor Dialog Z-Index in Bootstrap Modals */
         .cke_dialog, .cke_dialog_background { z-index: 1060 !important; }
         
-        /* Login Screen */
         #login-overlay {
             position: fixed; inset: 0; background: #343a40; z-index: 2000;
             display: flex; align-items: center; justify-content: center;
@@ -73,14 +72,12 @@
         .logo-admin { width: 80px; height: 80px; margin-bottom: 15px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
         .logo-admin:hover { transform: scale(1.1); }
 
-        /* Review Styles */
         .review-item { border-bottom: 1px solid #eee; padding: 15px 0; }
         .review-q { font-weight: bold; margin-bottom: 5px; color: #555; }
         .review-ans { background: #f8f9fa; padding: 10px; border-radius: 5px; border: 1px solid #e9ecef; }
         .review-img { max-width: 100%; height: auto; border-radius: 5px; margin-top: 5px; border: 1px solid #ddd; }
         .score-input { width: 100px; }
 
-        /* --- STYLES FOR PREVIEW SOAL --- */
         :root { --primary: #0e58a6; --success: #198754; }
         .teks-soal { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; } 
         .teks-soal img { max-width: 100% !important; height: auto !important; border-radius: 5px; border: 1px solid #ddd; display: block; margin: 10px 0; }
@@ -151,7 +148,7 @@
         <a href="javascript:void(0)" onclick="loadPage('hasil')" id="nav-hasil"><i class="fas fa-chart-bar"></i> Hasil Nilai</a>
         <a href="javascript:void(0)" onclick="loadPage('rekap')" id="nav-rekap"><i class="fas fa-list-alt"></i> Rekap Jawaban</a>
         <a href="javascript:void(0)" onclick="loadPage('cetak')" id="nav-cetak"><i class="fas fa-print"></i> Cetak Dokumen</a>
-        <a href="javascript:void(0)" onclick="doLogout()" class="mt-5 text-danger"><i class="fas fa-sign-out-alt"></i> <strong>Keluar</strong></a>
+        <a href="javascript:void(0)" onclick="doLogout()" class="mt-5 text-danger"><i class="fas fa-sign-out-alt"></i> Keluar</a>
     </div>
 
     <div class="main-content">
@@ -184,7 +181,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalUjian" tabindex="-1">
+    <div class="modal fade" id="modalUjian" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -214,7 +211,11 @@
                             </div>
                             <div class="col-md-6 mb-2"><label>Custom User Agent (Exambro)</label><input type="text" id="c_ua" class="form-control" placeholder="Isi 'ALL' jika bebas browser"></div>
                             <div class="col-md-6 mb-2"><label>Token Kirim Jawaban</label><input type="text" id="c_token_kirim" class="form-control" placeholder="Kosongkan jika tidak butuh token submit"></div>
-                            <div class="col-12 mb-2"><label>Tata Tertib</label><textarea id="c_rules" class="form-control" rows="3"></textarea></div>
+                            
+                            <div class="col-12 mb-2">
+                                <label class="fw-bold">Tata Tertib</label>
+                                <textarea id="c_rules" class="form-control" rows="3"></textarea>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -442,12 +443,116 @@ function loadPage(page) {
     }
 }
 
-// --- LOGIKA CKEDITOR 4.22.1 TERBAIK & TANPA WARNING ---
+// ==========================================
+// LOGIKA CKEDITOR UNTUK FORM KONFIGURASI UJIAN (TATA TERTIB)
+// ==========================================
+function modalConfig(mode, dataStr) {
+    let modalEl = document.getElementById('modalUjian');
+    let m = bootstrap.Modal.getInstance(modalEl);
+    if (!m) m = new bootstrap.Modal(modalEl);
+
+    // 1. Set Native DOM Textarea terlebih dahulu sebelum Modal muncul
+    if(mode === 'edit' && dataStr) {
+        const data = JSON.parse(decodeURIComponent(dataStr));
+        document.getElementById('c_kode').value = data[0]; 
+        document.getElementById('c_judul').value = data[1]; 
+        document.getElementById('c_sheet').value = data[2]; 
+        document.getElementById('c_durasi').value = data[3]; 
+        document.getElementById('c_mulai').value = data[4] ? data[4].replace(' ', 'T') : ''; 
+        document.getElementById('c_selesai').value = data[5] ? data[5].replace(' ', 'T') : ''; 
+        document.getElementById('c_kelas').value = data[6]; 
+        document.getElementById('c_batas').value = data[7];
+        document.getElementById('c_token').value = data[8]; 
+        document.getElementById('c_akses').value = data[9]; 
+        document.getElementById('c_acak').value = data[10]; 
+        document.getElementById('c_hasil').value = data[11]; 
+        
+        // Atur native value untuk Tata Tertib
+        document.getElementById('c_rules').value = data[12] || ''; 
+        
+        document.getElementById('c_ua').value = data[13] || '';
+        document.getElementById('c_token_kirim').value = data[14] || ''; 
+        document.getElementById('c_kode').readOnly = true;
+    } else { 
+        document.getElementById('formUjian').reset(); 
+        document.getElementById('c_rules').value = ''; 
+        document.getElementById('c_kode').readOnly = false; 
+    }
+
+    // 2. Munculkan Modal
+    m.show();
+
+    // 3. Render CKEditor HANYA JIKA MODAL SUDAH TERBUKA PENUH
+    modalEl.addEventListener('shown.bs.modal', function initEditorConfig() {
+        modalEl.removeEventListener('shown.bs.modal', initEditorConfig);
+
+        // Hancurkan instance lama jika ada
+        if (CKEDITOR.instances.c_rules) {
+            try { CKEDITOR.instances.c_rules.destroy(true); } catch(e) { console.error(e); }
+        }
+
+        const configSimple = {
+            versionCheck: false,
+            height: 150,
+            toolbarGroups: [
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
+                { name: 'insert', groups: ['insert'] },
+                { name: 'colors' }
+            ],
+            removeButtons: 'About,Maximize,Source'
+        };
+
+        // Render Ulang (akan otomatis menarik value dari DOM Textarea)
+        CKEDITOR.replace('c_rules', configSimple);
+    });
+}
+
+function saveUjian() { 
+    // Ambil data tata tertib dari CKEditor jika sudah ready, atau fallback ke textarea native
+    let rulesData = '';
+    if (CKEDITOR.instances.c_rules) {
+        rulesData = CKEDITOR.instances.c_rules.getData();
+    } else {
+        rulesData = document.getElementById('c_rules').value;
+    }
+
+    const mulaiRaw = document.getElementById('c_mulai').value;
+    const selesaiRaw = document.getElementById('c_selesai').value;
+
+    const data = { 
+        kode: document.getElementById('c_kode').value, 
+        judul: document.getElementById('c_judul').value, 
+        sheetSoal: document.getElementById('c_sheet').value, 
+        durasi: document.getElementById('c_durasi').value, 
+        mulai: mulaiRaw ? mulaiRaw.replace('T', ' ')+':00' : '', 
+        selesai: selesaiRaw ? selesaiRaw.replace('T', ' ')+':00' : '', 
+        kelas: document.getElementById('c_kelas').value, 
+        batas: document.getElementById('c_batas').value, 
+        token: document.getElementById('c_token').value, 
+        aksesToken: document.getElementById('c_akses').value, 
+        acak: document.getElementById('c_acak').value, 
+        tampilHasil: document.getElementById('c_hasil').value, 
+        tataTertib: rulesData, // Disimpan sebagai format HTML dari CKEditor
+        customUA: document.getElementById('c_ua').value, 
+        tokenKirim: document.getElementById('c_token_kirim').value 
+    };
+
+    fetchAPI('saveConfig', { data: data }).then(res => { 
+        if(res.status==='ok') { bootstrap.Modal.getInstance(document.getElementById('modalUjian')).hide(); loadPage('ujian'); } 
+        else Swal.fire('Error', res.message, 'error'); 
+    }); 
+}
+
+// ==========================================
+// LOGIKA CKEDITOR UNTUK FORM SOAL
+// ==========================================
 function modalSoal(mode, dataStr) {
     let modalEl = document.getElementById('modalSoal');
     let m = bootstrap.Modal.getInstance(modalEl);
     if (!m) m = new bootstrap.Modal(modalEl);
 
+    // 1. Set Native DOM Textarea terlebih dahulu
     if(mode === 'edit') {
         const d = JSON.parse(decodeURIComponent(dataStr));
         let kunciIdx = globalSoalHeaders.findIndex(h => String(h).toLowerCase().includes('kunci'));
@@ -818,10 +923,14 @@ function fetchTableData(sheetName, type, editable) {
     });
 }
 
+function deleteConfig(kode) { 
+    if(confirm('Hapus?')) fetchAPI('deleteConfig', { kode: kode }).then(()=>loadPage('ujian')); 
+}
+
 function resetHasil(nisn, kode) { Swal.fire({title:'Reset?', text:'Data akan dihapus.', showCancelButton:true}).then(r=>{ if(r.isConfirmed) fetchAPI('deleteHasil', {nisn: nisn, kode: kode}).then(()=>{ loadPage('hasil'); }); }); }
 function resetCache() { fetchAPI('resetCache').then(()=>{ Swal.fire('Sukses','Cache bersih','success') }); }
 
-// Restored Modal Functions for Users and Config
+// Restored Modal Functions for Users
 function modalUser(mode, dataStr) {
     const modal = new bootstrap.Modal(document.getElementById('modalPeserta'));
     if(mode === 'edit' && dataStr) {
@@ -841,29 +950,6 @@ function savePeserta() {
 
 function deleteUser(nisn) { 
     if(confirm('Hapus?')) fetchAPI('deleteUser', { nisn: nisn }).then(()=>loadPage('peserta')); 
-}
-
-function modalConfig(mode, dataStr) {
-    const modal = new bootstrap.Modal(document.getElementById('modalUjian'));
-    if(mode === 'edit' && dataStr) {
-        const data = JSON.parse(decodeURIComponent(dataStr));
-        document.getElementById('c_kode').value = data[0]; document.getElementById('c_judul').value = data[1]; document.getElementById('c_sheet').value = data[2]; document.getElementById('c_durasi').value = data[3]; document.getElementById('c_mulai').value = data[4] ? data[4].replace(' ', 'T') : ''; document.getElementById('c_selesai').value = data[5] ? data[5].replace(' ', 'T') : ''; document.getElementById('c_kelas').value = data[6]; document.getElementById('c_batas').value = data[7];
-        document.getElementById('c_token').value = data[8]; document.getElementById('c_akses').value = data[9]; document.getElementById('c_acak').value = data[10]; document.getElementById('c_hasil').value = data[11]; document.getElementById('c_rules').value = data[12]; document.getElementById('c_ua').value = data[13];
-        document.getElementById('c_token_kirim').value = data[14] || ''; document.getElementById('c_kode').readOnly = true;
-    } else { document.getElementById('formUjian').reset(); document.getElementById('c_kode').readOnly = false; }
-    modal.show();
-}
-
-function saveUjian() { 
-    const data = { kode: document.getElementById('c_kode').value, judul: document.getElementById('c_judul').value, sheetSoal: document.getElementById('c_sheet').value, durasi: document.getElementById('c_durasi').value, mulai: document.getElementById('c_mulai').value.replace('T', ' ')+':00', selesai: document.getElementById('c_selesai').value.replace('T', ' ')+':00', kelas: document.getElementById('c_kelas').value, batas: document.getElementById('c_batas').value, token: document.getElementById('c_token').value, aksesToken: document.getElementById('c_akses').value, acak: document.getElementById('c_acak').value, tampilHasil: document.getElementById('c_hasil').value, tataTertib: document.getElementById('c_rules').value, customUA: document.getElementById('c_ua').value, tokenKirim: document.getElementById('c_token_kirim').value };
-    fetchAPI('saveConfig', { data: data }).then(res => { 
-        if(res.status==='ok') { bootstrap.Modal.getInstance(document.getElementById('modalUjian')).hide(); loadPage('ujian'); } 
-        else Swal.fire('Error', res.message, 'error'); 
-    }); 
-}
-
-function deleteConfig(kode) { 
-    if(confirm('Hapus?')) fetchAPI('deleteConfig', { kode: kode }).then(()=>loadPage('ujian')); 
 }
 
 // Restored Koreksi Fungsi
