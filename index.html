@@ -12,8 +12,8 @@
     
     <style>
 :root { 
-    --primary: #0e58a6; /* Warna biru utama sesuai permintaan Anda */
-    --primary-dark: #0b4685; /* Warna biru yang sedikit lebih gelap untuk efek hover/klik */
+    --primary: #0e58a6; 
+    --primary-dark: #0b4685; 
     --secondary: #64748b; 
     --bg: #f8fafc; 
     --card: #ffffff; 
@@ -64,7 +64,7 @@ body {
 }
 .form-control:focus { 
     background: var(--card); border-color: var(--primary); outline: none; 
-    box-shadow: 0 0 0 3px rgba(14, 88, 166, 0.15); /* Pendaran senada dengan biru #0e58a6 */
+    box-shadow: 0 0 0 3px rgba(14, 88, 166, 0.15); 
 }
 .password-wrapper { position: relative; margin-bottom: 15px; } 
 .password-wrapper input { margin-bottom: 0; padding-right: 45px; }
@@ -110,8 +110,7 @@ body {
 .opsi-group { display: flex; flex-direction: column; gap: 12px; } 
 .opsi-item { display: flex; align-items: flex-start; padding: 14px 18px; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s ease; background: var(--card); } 
 .opsi-item:hover { background: var(--bg); border-color: #cbd5e1; } 
-/* Highlight when selected/checked via CSS */
-.opsi-item:has(input:checked) { border-color: var(--primary); background: #e7f1ff; } /* Biru latar belakang lembut senada */
+.opsi-item:has(input:checked) { border-color: var(--primary); background: #e7f1ff; } 
 .opsi-item input { margin-right: 15px; margin-top: 4px; transform: scale(1.3); accent-color: var(--primary); }
 .opsi-content { flex: 1; overflow-x: auto; line-height: 1.5; font-size: 1.05rem; }
 .opsi-content p { margin: 0; padding: 0; }
@@ -203,7 +202,6 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
                 <button class="btn-request" onclick="requestTokenMsg()">Request<br>Token</button>
             </div>
             <button id="btnLogin" class="btn-block" onclick="doLogin()">MASUK</button>
-            <button id="btnReset" class="btn-block" onclick="confirmReset()" style="margin-top: 10px; background: #dc3545;">↻ UPDATE DATA (RESET CACHE)</button>
         </div>
     </div>
 
@@ -283,7 +281,7 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxst1-xO0JICbogBzhqQ8C13-_q_6oLGBoDAQfmXOz10BMY03Ynn0i51IWiyK5G2BLR/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6o5c1thlIfdgQ-mCaJobEW-Tefj5IVjap_3MYYFxcA_xQairZ8vUXrv4BmbxX17lA/exec';
 
 async function fetchAPI(action, payload = {}) {
     try {
@@ -318,13 +316,10 @@ function initData(res) {
     const selKelas = document.getElementById('selKelas');
     selKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
     
-    // --- TAMBAHAN KODE SORTING ---
-    // Mengurutkan array kelas dari kecil ke besar (mendukung teks campuran seperti "10 MIPA")
     let kelasTerurut = res.kelas.sort((a, b) => {
         return a.toString().localeCompare(b.toString(), undefined, { numeric: true, sensitivity: 'base' });
     });
 
-    // Looping data yang sudah diurutkan
     kelasTerurut.forEach(k => { 
         let opt = document.createElement('option'); 
         opt.value = k; 
@@ -378,20 +373,6 @@ function cekTokenOtomatis() {
 }
 
 function requestTokenMsg() { Swal.fire({ title: 'Info Token', text: 'Minta token pada pengawas.', icon: 'info' }); }
-
-function confirmReset() {
-    Swal.fire({ title: 'Reset Data Server?', html: 'Hapus cache? Gunakan jika baru update Spreadsheet.<br>Apakah Anda yakin?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc3545', confirmButtonText: 'Ya, Reset Data!' }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({ title: 'Resetting...', didOpen: () => Swal.showLoading() });
-            fetchAPI('resetCache').then(() => {
-                Swal.fire({ title: 'Berhasil', icon: 'success', timer: 1000, showConfirmButton: false }).then(() => {
-                    backToLogin();
-                    fetchAPI('getDataLogin').then(res => initData(res));
-                });
-            });
-        }
-    });
-}
 
 function backToLogin() {
     document.getElementById('successScreen').style.display = 'none'; document.getElementById('ujianScreen').style.display = 'none'; document.getElementById('rulesScreen').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex';
@@ -497,8 +478,8 @@ function renderSoal(idx) {
     currIdx = idx;
     const q = examData[idx]; const div = document.getElementById('soalContainer');
     
-    // Ganti label menjadi ID Soal dan terapkan parseImgTags pada Teks Utama
-    let h = `<div class="nomor-soal"><span>Soal No. ${q.id || (idx+1)}</span> <span>${q.tipe}</span></div><div class="teks-soal">${parseImgTags(q.soal)}</div>`;
+    // UI Nomor Soal agar selalu urut mulai dari 1
+    let h = `<div class="nomor-soal"><span>Soal No. ${idx + 1}</span> <span>${q.tipe}</span></div><div class="teks-soal">${parseImgTags(q.soal)}</div>`;
 
     if (q.tipe === 'JODOHKAN') {
         h += `<div class="jodoh-container" id="jodohArea_${q.id}"><svg class="jodoh-svg" id="svg_${q.id}"></svg><div class="jodoh-col" id="colLeft_${q.id}"></div><div class="jodoh-col" id="colRight_${q.id}"></div></div><div style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">Klik butir Kiri lalu klik butir Kanan untuk menghubungkan.</div>`;
@@ -640,7 +621,10 @@ function renderNav() {
 function createNavButton(q, i) {
     const d = document.createElement('div'); 
     d.className = 'nav-btn'; 
-    d.innerText = q.id || (i+1); 
+    
+    // UI Navigasi Soal agar selalu urut mulai dari 1
+    d.innerText = i + 1; 
+    
     d.dataset.index = i; 
     
     const ans = answers[q.id]; let fill = false;
@@ -725,16 +709,14 @@ function updateTime() {
     
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     
-    // Ambil data waktu
     const date = now.getDate().toString().padStart(2, '0');
     const month = months[now.getMonth()];
-    const year = now.getFullYear(); // Menampilkan 4 digit (contoh: 2026)
+    const year = now.getFullYear(); 
     
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
 
-    // Format baru: DD Mon YYYY HH:mm:ss (Tanpa garis miring)
     const timeString = `${date} ${month} ${year} ${hours}:${minutes}:${seconds}`;
     
     document.getElementById('date_time').innerHTML = timeString;
