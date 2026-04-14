@@ -27,6 +27,43 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
 }
 
+/* --- DARK MODE OVERRIDES --- */
+body.dark-mode {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --border: #334155;
+    --secondary: #94a3b8;
+}
+body.dark-mode .opsi-item:hover, body.dark-mode .jodoh-item:hover { background: #334155; }
+body.dark-mode .opsi-item:has(input:checked) { background: #1e3a8a; border-color: #3b82f6; }
+body.dark-mode .jodoh-item.selected { background: #1e3a8a; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+body.dark-mode .nav-btn { background: var(--card); border-color: var(--border); color: var(--secondary); }
+body.dark-mode .nav-btn:hover { border-color: #64748b; color: #f1f5f9; }
+body.dark-mode .nav-btn.active { background: #1e3a8a; border-color: #3b82f6; color: #93c5fd; }
+body.dark-mode .nav-btn.filled { background: #059669; color: white; border-color: #059669; }
+body.dark-mode .timer-display { background: #1e293b; color: #fbbf24; border-color: #334155; }
+body.dark-mode .tab-switch-warning { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+body.dark-mode .rules-footer { background: var(--card); }
+body.dark-mode .upload-area:hover { background: #1e3a8a; border-color: #3b82f6; }
+body.dark-mode .rules-content { background: #0f172a; color: #cbd5e1; }
+body.dark-mode .m-timer { background: #1e293b; color: #fbbf24; border-color: #334155; }
+body.dark-mode .m-violation { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+body.dark-mode .form-control { background: #0f172a; color: #f1f5f9; }
+
+/* --- FONT SIZE MODES --- */
+body.font-small { font-size: 14px; }
+body.font-small .teks-soal { font-size: 1rem; }
+body.font-small .opsi-content { font-size: 0.95rem; }
+
+body.font-medium { font-size: 16px; }
+body.font-medium .teks-soal { font-size: 1.1rem; }
+body.font-medium .opsi-content { font-size: 1.05rem; }
+
+body.font-large { font-size: 18px; }
+body.font-large .teks-soal { font-size: 1.35rem; }
+body.font-large .opsi-content { font-size: 1.25rem; }
+
 body { 
     font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
     background: var(--bg); 
@@ -39,18 +76,19 @@ body {
     -moz-user-select: none; 
     -ms-user-select: none; 
     user-select: none; 
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* --- Layout Screens --- */
 #loginScreen, #successScreen { 
     position: fixed; inset: 0; z-index: 999; display: flex; align-items: center; justify-content: center; 
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+    background: linear-gradient(135deg, var(--bg) 0%, var(--border) 100%); 
 }
 
 /* --- Login Box --- */
 .login-box { 
     background: var(--card); width: 90%; max-width: 380px; padding: 2.5rem 2rem; 
-    border-radius: 1.5rem; box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 1.5rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
 }
 .login-header { text-align: center; margin-bottom: 2rem; } 
 .login-header h2 { margin: 0; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; font-size: 1.5rem;}
@@ -80,30 +118,30 @@ body {
 .btn-block:active { transform: translateY(0); }
 
 /* --- Rules Screen --- */
-#rulesScreen { display: none; position: fixed; inset: 0; z-index: 998; flex-direction: column; align-items: center; justify-content: center; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(5px); padding: 20px; }
-.rules-card { background: white; border-radius: 1.2rem; width: 100%; max-width: 600px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 1px solid var(--border); }
+#rulesScreen { display: none; position: fixed; inset: 0; z-index: 998; flex-direction: column; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); padding: 20px; }
+.rules-card { background: var(--card); border-radius: 1.2rem; width: 100%; max-width: 600px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 1px solid var(--border); }
 .rules-header { background: var(--primary); color: white; padding: 18px; text-align: center; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px;}
 .rules-body { padding: 25px; overflow-y: auto; } 
 .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; } 
 .info-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 0.95rem; } 
 .info-table td:first-child { font-weight: 600; width: 140px; color: var(--secondary); }
-.rules-content { background: var(--bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border); font-size: 0.9rem; line-height: 1.7; white-space: pre-line; margin-bottom: 20px; color: #475569; }
-.rules-footer { padding: 18px 25px; border-top: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: flex-end; gap: 12px; }
+.rules-content { background: var(--bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border); font-size: 0.9rem; line-height: 1.7; white-space: pre-line; margin-bottom: 20px; color: var(--text); }
+.rules-footer { padding: 18px 25px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
 .btn-start { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
 .btn-start:hover { background: #059669; transform: translateY(-1px); }
 
 /* --- Exam Area --- */
 #ujianScreen { display: none; flex-direction: column; height: 100%; } 
-.top-bar { background: var(--card); padding: 12px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: var(--shadow-sm); } 
+.top-bar { background: var(--card); padding: 12px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: var(--shadow-sm); transition: 0.3s;} 
 .top-bar .logo-img { width: 38px; height: 38px; margin: 0; border-radius: 8px; box-shadow: none;} 
 .user-info { font-size: 0.95rem; font-weight: 600; color: var(--text); }
 .main-area { display: flex; flex: 1; overflow: hidden; gap: 20px; padding: 20px; position: relative;} 
 
 /* --- Panels --- */
-.soal-panel { flex: 3; background: var(--card); border-radius: var(--radius); padding: 30px; overflow-y: auto; display: flex; flex-direction: column; box-shadow: var(--shadow); border: 1px solid var(--border); } 
-.nav-panel { flex: 1; background: var(--card); border-radius: var(--radius); padding: 25px; overflow-y: auto; max-width: 320px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-.nomor-soal { display: flex; justify-content: space-between; border-bottom: 2px solid var(--bg); padding-bottom: 15px; margin-bottom: 20px; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
-.teks-soal { font-size: 1.1rem; line-height: 1.7; margin-bottom: 25px; color: var(--text); } 
+.soal-panel { flex: 3; background: var(--card); border-radius: var(--radius); padding: 30px; overflow-y: auto; display: flex; flex-direction: column; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s;} 
+.nav-panel { flex: 1; background: var(--card); border-radius: var(--radius); padding: 25px; overflow-y: auto; max-width: 320px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s;}
+.nomor-soal { display: flex; justify-content: space-between; border-bottom: 2px solid var(--bg); padding-bottom: 15px; margin-bottom: 20px; font-weight: 700; color: var(--primary); }
+.teks-soal { line-height: 1.7; margin-bottom: 25px; color: var(--text); } 
 .teks-soal img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-top: 10px;}
 
 /* --- Options --- */
@@ -112,7 +150,7 @@ body {
 .opsi-item:hover { background: var(--bg); border-color: #cbd5e1; } 
 .opsi-item:has(input:checked) { border-color: var(--primary); background: #e7f1ff; } 
 .opsi-item input { margin-right: 15px; margin-top: 4px; transform: scale(1.3); accent-color: var(--primary); }
-.opsi-content { flex: 1; overflow-x: auto; line-height: 1.5; font-size: 1.05rem; }
+.opsi-content { flex: 1; overflow-x: auto; line-height: 1.5; }
 .opsi-content p { margin: 0; padding: 0; }
 .opsi-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
 
@@ -130,7 +168,7 @@ body {
 line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 
 /* --- Upload Area --- */
-.upload-area { border: 2px dashed #cbd5e1; padding: 25px; text-align: center; border-radius: 10px; background: var(--bg); margin-bottom: 20px; transition: 0.2s; } 
+.upload-area { border: 2px dashed var(--secondary); padding: 25px; text-align: center; border-radius: 10px; background: var(--bg); margin-bottom: 20px; transition: 0.2s; } 
 .upload-area:hover { border-color: var(--primary); background: #e7f1ff; }
 .preview-box { margin-top: 15px; display: none; } 
 .preview-box img { max-width: 180px; border-radius: 8px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
@@ -143,8 +181,8 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 .nav-btn.filled { background: var(--success); color: white; border-color: var(--success); }
 
 /* --- Timers & Warnings --- */
-.timer-display { background: #fffbeb; color: #b45309; padding: 15px; text-align: center; border-radius: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; border: 1px solid #fde68a; box-shadow: var(--shadow-sm); letter-spacing: 1px; }
-.tab-switch-warning { background: #fef2f2; color: var(--danger); padding: 8px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem; text-align: center; font-weight: 600; border: 1px solid #fecaca; }
+.timer-display { background: #fffbeb; color: #b45309; padding: 15px; text-align: center; border-radius: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; border: 1px solid #fde68a; box-shadow: var(--shadow-sm); letter-spacing: 1px; transition: 0.3s;}
+.tab-switch-warning { background: #fef2f2; color: var(--danger); padding: 8px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem; text-align: center; font-weight: 600; border: 1px solid #fecaca; transition: 0.3s;}
 
 /* --- Footers --- */
 .footer-controls { margin-top: auto; display: flex; justify-content: space-between; padding-top: 30px; } 
@@ -155,22 +193,27 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 .btn-next:hover { background: var(--primary-dark); transform: translateY(-1px); }
 .btn-submit { background: var(--success); display: none; } 
 .btn-submit:hover { background: #059669; transform: translateY(-1px); }
-.main-footer { text-align: center; padding: 12px; background: var(--card); font-size: 0.8rem; color: var(--secondary); font-weight: 500; border-top: 1px solid var(--border); }
+.main-footer { text-align: center; padding: 12px; background: var(--card); font-size: 0.8rem; color: var(--secondary); font-weight: 500; border-top: 1px solid var(--border); transition: 0.3s;}
 
 /* --- Modals --- */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; } 
-.modal-content { background: var(--card); width: 90%; max-width: 380px; padding: 25px; border-radius: 1.2rem; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg); } 
+.modal-content { background: var(--card); width: 90%; max-width: 380px; padding: 25px; border-radius: 1.2rem; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg); transition: 0.3s;} 
 .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: var(--secondary); transition: 0.2s; }
 .close-modal:hover { color: var(--danger); }
+
+/* --- Top Bar Controls (NEW) --- */
+.top-controls { display: flex; gap: 8px; align-items: center; }
+.btn-icon { background: var(--secondary); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.2s; }
+.btn-icon:hover { background: #475569; transform: scale(1.05); }
 
 /* --- Mobile Responsiveness --- */
 @media(max-width: 768px) { 
     .main-area { flex-direction: column; padding: 12px; gap: 15px; } 
     .nav-panel { display: none; } 
-    .mobile-header-panel { display: flex; flex-direction: column; gap: 10px; background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); position: sticky; top: 0; z-index: 95; box-shadow: var(--shadow); } 
+    .mobile-header-panel { display: flex; flex-direction: column; gap: 10px; background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); position: sticky; top: 0; z-index: 95; box-shadow: var(--shadow); transition: 0.3s;} 
     .mobile-top-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1rem; } 
-    .m-timer { color: #b45309; background: #fffbeb; padding: 8px 12px; border-radius: 8px; border: 1px solid #fde68a; } 
-    .m-violation { color: var(--danger); background: #fef2f2; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; border: 1px solid #fecaca; } 
+    .m-timer { color: #b45309; background: #fffbeb; padding: 8px 12px; border-radius: 8px; border: 1px solid #fde68a; transition: 0.3s;} 
+    .m-violation { color: var(--danger); background: #fef2f2; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; border: 1px solid #fecaca; transition: 0.3s;} 
     .mobile-nav-trigger-btn { background: var(--bg); color: var(--text); border: 2px solid var(--border); width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; } 
     .mobile-nav-trigger-btn:active { background: #e2e8f0; transform: scale(0.98); } 
     .soal-panel { width: 100%; margin-bottom: 10px; box-sizing: border-box; padding: 20px 15px; } 
@@ -180,8 +223,7 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
 @media(min-width: 769px) { .mobile-header-panel { display: none; } }
     </style>
 </head>
-<body>
-    <div id="loginScreen">
+<body class="font-medium"> <div id="loginScreen">
         <div class="login-box">
             <div class="login-header">
                 <a href="?page=admin" target="_top" title="Klik untuk ke Admin Panel" style="text-decoration:none;">
@@ -215,11 +257,11 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
                     <tr><td>Mapel Ujian</td><td id="infoMapel">: -</td></tr>
                     <tr><td>Kode Ujian</td><td id="infoKode">: -</td></tr>
                 </table>
-                <div style="font-weight:bold; margin-bottom:5px; color:#333;">Tata Tertib Ujian:</div>
+                <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Tata Tertib Ujian:</div>
                 <div class="rules-content" id="txtRules"></div>
             </div>
             <div class="rules-footer">
-                <button onclick="backToLogin()" style="background:#6c757d; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;">Batal</button>
+                <button onclick="backToLogin()" style="background:var(--secondary); color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;">Batal</button>
                 <button class="btn-start" onclick="beginExam()">MULAI MENGERJAKAN</button>
             </div>
         </div>
@@ -231,7 +273,13 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
                 <img src="https://lh3.googleusercontent.com/d/1O94lUuV8pHaSiGCoOsxUsOUL7bGsHjTC" alt="Logo" class="logo-img" style="margin-right:10px;">
                 <div class="user-info"><span id="namaUser">Nama Peserta</span> | <span id="kodeUser">Kode</span></div>
             </div>
-            <button onclick="confirmFinish()" style="background:#dc3545; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Selesai</button>
+            
+            <div class="top-controls">
+                <button class="btn-icon" onclick="changeFontSize()" title="Ubah Ukuran Font">Aa</button>
+                <button class="btn-icon" id="btnThemeToggle" onclick="toggleTheme()" title="Mode Gelap / Terang"><i class="fas fa-moon"></i></button>
+                <button onclick="confirmFinish()" style="background:var(--danger); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer; margin-left:5px;">Selesai</button>
+            </div>
+
         </div>
         <div class="main-area">
             <div class="mobile-header-panel">
@@ -253,7 +301,7 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
                 <div class="timer-display" id="timer">00:00:00</div>
                 <div style="font-size:0.85rem; margin-bottom:10px; font-weight:bold;">Navigasi Soal</div>
                 <div class="nav-grid" id="navGrid"></div>
-                <div style="margin-top:20px; font-size:0.8rem; color:#dc3545; text-align:center;">⚠️ Dilarang pindah tab / keluar fullscreen!</div>
+                <div style="margin-top:20px; font-size:0.8rem; color:var(--danger); text-align:center;">⚠️ Dilarang pindah tab / keluar fullscreen!</div>
                 <div class="tab-switch-warning" id="tabWarning">Pelanggaran: 0/3</div>
             </div>
         </div>
@@ -263,25 +311,59 @@ line { stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round; }
     <div class="modal-overlay" id="mobileNavModal">
         <div class="modal-content">
             <span class="close-modal" onclick="toggleNavModal()">×</span>
-            <div style="text-align:center; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Daftar Soal</div>
+            <div style="text-align:center; font-weight:bold; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">Daftar Soal</div>
             <div class="nav-grid" id="navGridMobile"></div>
-            <div style="margin-top:15px; font-size:0.8rem; color:#dc3545; text-align:center;">Jaga kejujuran dalam mengerjakan ujian.</div>
+            <div style="margin-top:15px; font-size:0.8rem; color:var(--danger); text-align:center;">Jaga kejujuran dalam mengerjakan ujian.</div>
         </div>
     </div>
 
     <div id="successScreen" style="display:none;">
-        <div style="background:white; padding:40px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1); text-align:center; max-width:400px; width:90%;">
-            <div style="font-size:4rem; color:#198754; margin-bottom:10px;">🎉</div>
-            <h2 style="color:#333; margin:0;">Ujian Selesai</h2>
+        <div style="background:var(--card); padding:40px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1); text-align:center; max-width:400px; width:90%;">
+            <div style="font-size:4rem; color:var(--success); margin-bottom:10px;">🎉</div>
+            <h2 style="color:var(--text); margin:0;">Ujian Selesai</h2>
             <div id="successScore"></div>
-            <p id="successMsg" style="color:#555;"></p>
-            <button onclick="backToLogin()" style="margin-top:20px; padding:12px 30px; background:#0d6efd; color:white; border:none; border-radius:50px; font-weight:bold; cursor:pointer;">Kembali ke Login</button>
+            <p id="successMsg" style="color:var(--secondary);"></p>
+            <button onclick="backToLogin()" style="margin-top:20px; padding:12px 30px; background:var(--primary); color:white; border:none; border-radius:50px; font-weight:bold; cursor:pointer;">Kembali ke Login</button>
         </div>
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6o5c1thlIfdgQ-mCaJobEW-Tefj5IVjap_3MYYFxcA_xQairZ8vUXrv4BmbxX17lA/exec';
+
+// --- FITUR TEMA & FONT ---
+let currentFontState = 1; // 0=Kecil, 1=Medium, 2=Besar
+const fontClasses = ['font-small', 'font-medium', 'font-large'];
+
+function changeFontSize() {
+    document.body.classList.remove(...fontClasses);
+    currentFontState = (currentFontState + 1) % 3;
+    document.body.classList.add(fontClasses[currentFontState]);
+    localStorage.setItem('cbt_font_size', currentFontState);
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('cbt_theme', isDark ? 'dark' : 'light');
+    document.getElementById('btnThemeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+}
+
+function loadPreferences() {
+    const savedTheme = localStorage.getItem('cbt_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('btnThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    const savedFont = localStorage.getItem('cbt_font_size');
+    if (savedFont !== null) {
+        document.body.classList.remove(...fontClasses);
+        currentFontState = parseInt(savedFont);
+        document.body.classList.add(fontClasses[currentFontState]);
+    }
+}
+// -------------------------
 
 async function fetchAPI(action, payload = {}) {
     try {
@@ -301,6 +383,7 @@ let allExams = [], examData = [], examDataRaw = null, answers = {}, currIdx = 0,
 const SESSION_KEY = 'cbt_user_session';
 
 window.onload = () => {
+    loadPreferences(); // Load Theme & Font
     if(checkSession()) return;
     Swal.fire({ title: 'Memuat Data...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
     fetchAPI('getDataLogin').then(res => initData(res));
@@ -368,7 +451,7 @@ function filterUjian() {
 function cekTokenOtomatis() {
     const kodeUjian = document.getElementById('selUjian').value;
     const inpToken = document.getElementById('inpToken'); const ujianTerpilih = allExams.find(u => u.kode === kodeUjian);
-    if (ujianTerpilih && ujianTerpilih.autoToken) { inpToken.value = ujianTerpilih.autoToken; inpToken.readOnly = true; inpToken.style.backgroundColor = "#e9ecef"; inpToken.style.fontWeight = "bold"; }
+    if (ujianTerpilih && ujianTerpilih.autoToken) { inpToken.value = ujianTerpilih.autoToken; inpToken.readOnly = true; inpToken.style.backgroundColor = "var(--border)"; inpToken.style.fontWeight = "bold"; }
     else { inpToken.value = ""; inpToken.readOnly = false; inpToken.style.backgroundColor = ""; inpToken.style.fontWeight = "normal"; }
 }
 
@@ -478,11 +561,10 @@ function renderSoal(idx) {
     currIdx = idx;
     const q = examData[idx]; const div = document.getElementById('soalContainer');
     
-    // UI Nomor Soal agar selalu urut mulai dari 1
     let h = `<div class="nomor-soal"><span>Soal No. ${idx + 1}</span> <span>${q.tipe}</span></div><div class="teks-soal">${parseImgTags(q.soal)}</div>`;
 
     if (q.tipe === 'JODOHKAN') {
-        h += `<div class="jodoh-container" id="jodohArea_${q.id}"><svg class="jodoh-svg" id="svg_${q.id}"></svg><div class="jodoh-col" id="colLeft_${q.id}"></div><div class="jodoh-col" id="colRight_${q.id}"></div></div><div style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">Klik butir Kiri lalu klik butir Kanan untuk menghubungkan.</div>`;
+        h += `<div class="jodoh-container" id="jodohArea_${q.id}"><svg class="jodoh-svg" id="svg_${q.id}"></svg><div class="jodoh-col" id="colLeft_${q.id}"></div><div class="jodoh-col" id="colRight_${q.id}"></div></div><div style="text-align:center; font-size:0.8rem; color:var(--secondary); margin-top:10px;">Klik butir Kiri lalu klik butir Kanan untuk menghubungkan.</div>`;
         setTimeout(() => initJodohkan(q), 50);
     } else if(q.tipe === 'PGS') {
         h += `<div class="opsi-group">`;
@@ -507,21 +589,21 @@ function renderSoal(idx) {
         q.opsi.forEach((opt, i) => {
             if(opt) {
                 const k = String.fromCharCode(65+i); const val = curr[k] || '';
-                const stB = val==='Benar'?'background:var(--success);color:white':''; const stS = val==='Salah'?'background:#dc3545;color:white':'';
-                h += `<div style="display:flex; justify-content:space-between; padding:10px; border:1px solid #eee; align-items:center;"><div class="opsi-content">${parseImgTags(opt)}</div><div style="min-width: 120px; text-align:right;"><button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stB}" onclick="saveBs('${q.id}','${k}','Benar')">Benar</button> <button style="border:1px solid #ccc; border-radius:4px; padding:4px 8px; ${stS}" onclick="saveBs('${q.id}','${k}','Salah')">Salah</button></div></div>`;
+                const stB = val==='Benar'?'background:var(--success);color:white':''; const stS = val==='Salah'?'background:var(--danger);color:white':'';
+                h += `<div style="display:flex; justify-content:space-between; padding:10px; border:1px solid var(--border); border-radius:8px; align-items:center;"><div class="opsi-content">${parseImgTags(opt)}</div><div style="min-width: 120px; text-align:right;"><button style="border:1px solid var(--border); border-radius:4px; padding:4px 8px; ${stB}" onclick="saveBs('${q.id}','${k}','Benar')">Benar</button> <button style="border:1px solid var(--border); border-radius:4px; padding:4px 8px; ${stS}" onclick="saveBs('${q.id}','${k}','Salah')">Salah</button></div></div>`;
             }
         });
         h += `</div>`;
     } else if (q.tipe === 'URAIAN') {
         const val = answers[q.id] || ''; let txtVal = ''; let imgSrc = '';
         if(typeof val === 'string') txtVal = val; else if(typeof val === 'object' && val.type === 'image') imgSrc = val.data;
-        h += `<div class="form-group mb-3"><label style="font-weight:bold;display:block;margin-bottom:5px">Jawaban Teks:</label><textarea class="form-control" style="width:100%;min-height:100px;border-radius:8px;padding:10px;border:1px solid #ccc;" placeholder="Tulis jawaban di sini..." onchange="saveAns('${q.id}', this.value)">${txtVal}</textarea></div><div class="upload-area"><p style="margin:0 0 10px; font-weight:bold;">Atau Upload Foto Jawaban:</p><input type="file" accept="image/*" onchange="compressAndSave(this, '${q.id}')"><div class="preview-box" style="display:${imgSrc?'block':'none'}"><img id="prev_${q.id}" src="${imgSrc}"><br><button onclick="clearUpload('${q.id}')" style="margin-top:5px;background:#dc3545;color:white;border:none;border-radius:4px;padding:2px 5px;font-size:0.8rem;cursor:pointer">Hapus Gambar</button></div></div>`;
+        h += `<div class="form-group mb-3"><label style="font-weight:bold;display:block;margin-bottom:5px">Jawaban Teks:</label><textarea class="form-control" style="width:100%;min-height:100px;border-radius:8px;padding:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);" placeholder="Tulis jawaban di sini..." onchange="saveAns('${q.id}', this.value)">${txtVal}</textarea></div><div class="upload-area"><p style="margin:0 0 10px; font-weight:bold;">Atau Upload Foto Jawaban:</p><input type="file" accept="image/*" onchange="compressAndSave(this, '${q.id}')"><div class="preview-box" style="display:${imgSrc?'block':'none'}"><img id="prev_${q.id}" src="${imgSrc}"><br><button onclick="clearUpload('${q.id}')" style="margin-top:5px;background:var(--danger);color:white;border:none;border-radius:4px;padding:4px 8px;font-size:0.8rem;cursor:pointer">Hapus Gambar</button></div></div>`;
     } else if (q.tipe === 'UPLOAD') {
         const val = answers[q.id] || ''; let imgSrc = (typeof val === 'object' && val.type === 'image') ? val.data : '';
         h += `<div class="upload-area"><p style="margin:0 0 10px; font-weight:bold;">Upload File/Foto Tugas:</p><input type="file" accept="image/*" onchange="compressAndSave(this, '${q.id}')"><div class="preview-box" style="display:${imgSrc?'block':'none'}"><img id="prev_${q.id}" src="${imgSrc}"></div></div>`;
     } else if (q.tipe === 'JAWABAN SINGKAT' || q.tipe === 'ISIAN SINGKAT') {
         const val = answers[q.id] || '';
-        h += `<div class="form-group"><label style="font-weight:bold;margin-bottom:5px;display:block">Jawaban Anda:</label><input type="text" class="form-control" value="${val}" placeholder="Ketikan jawaban singkat..." onchange="saveAns('${q.id}', this.value)"></div>`;
+        h += `<div class="form-group"><label style="font-weight:bold;margin-bottom:5px;display:block">Jawaban Anda:</label><input type="text" class="form-control" value="${val}" placeholder="Ketikan jawaban singkat..." onchange="saveAns('${q.id}', this.value)" style="background:var(--bg);color:var(--text);"></div>`;
     }
 
     div.innerHTML = h;
@@ -621,10 +703,7 @@ function renderNav() {
 function createNavButton(q, i) {
     const d = document.createElement('div'); 
     d.className = 'nav-btn'; 
-    
-    // UI Navigasi Soal agar selalu urut mulai dari 1
     d.innerText = i + 1; 
-    
     d.dataset.index = i; 
     
     const ans = answers[q.id]; let fill = false;
@@ -663,14 +742,14 @@ function startTimer(sec) {
 function confirmFinish(isViolation = false) {
     const reqToken = (examDataRaw && examDataRaw.tokenKirim) ? String(examDataRaw.tokenKirim).trim().toUpperCase() : "";
     let inputPlace = reqToken ? 'Ketik Token Kirim...' : 'Ketik kata SELESAI...';
-    let msgHtml = isViolation ? '<b style="color:red; font-size:1.1rem;">Batas pelanggaran telah tercapai.</b><br><br>' : '';
+    let msgHtml = isViolation ? '<b style="color:var(--danger); font-size:1.1rem;">Batas pelanggaran telah tercapai.</b><br><br>' : '';
     if(reqToken) { msgHtml += 'Silakan masukkan <b>Token Kirim Jawaban</b> (Minta pada pengawas) untuk mengakhiri ujian:'; } 
     else { msgHtml += 'Pastikan semua soal terjawab.<br>Ketik kata <b>SELESAI</b> di bawah ini untuk mengonfirmasi pengiriman:'; }
     
     Swal.fire({
         title: isViolation ? 'Ujian Dihentikan!' : 'Kirim Jawaban', html: msgHtml, input: 'text',
         inputAttributes: { autocapitalize: 'characters', autocomplete: 'off' }, inputPlaceholder: inputPlace,
-        icon: isViolation ? 'warning' : 'question', showCancelButton: !isViolation, allowOutsideClick: !isViolation, allowEscapeKey: !isViolation, confirmButtonText: 'Kirim Sekarang', cancelButtonText: 'Batal', confirmButtonColor: '#198754',
+        icon: isViolation ? 'warning' : 'question', showCancelButton: !isViolation, allowOutsideClick: !isViolation, allowEscapeKey: !isViolation, confirmButtonText: 'Kirim Sekarang', cancelButtonText: 'Batal', confirmButtonColor: '#10b981',
         preConfirm: (inputValue) => {
             let val = (inputValue || '').trim().toUpperCase();
             if (reqToken) {
@@ -696,7 +775,7 @@ function submitExam(forced) {
             Swal.close();
             let htmlNilai = '', pesanAkhir = '';
             if (res.tampilNilai && res.skor !== null) { 
-                htmlNilai = `<div style="font-size:4rem; font-weight:bold; color:#0d6efd; margin:10px 0;">${res.skor}</div>`; pesanAkhir = 'Nilai Anda berhasil direkam.'; 
+                htmlNilai = `<div style="font-size:4rem; font-weight:bold; color:var(--primary); margin:10px 0;">${res.skor}</div>`; pesanAkhir = 'Nilai Anda berhasil direkam.'; 
             } else { htmlNilai = `<div style="font-size:3rem; margin:20px 0;">🔒</div>`; pesanAkhir = 'Jawaban tersimpan. Nilai disembunyikan.'; }
             document.getElementById('successScore').innerHTML = htmlNilai; document.getElementById('successMsg').innerText = pesanAkhir;
             document.getElementById('successScreen').style.display = 'flex'; document.getElementById('ujianScreen').style.display = 'none';
@@ -706,19 +785,14 @@ function submitExam(forced) {
 
 function updateTime() {
     const now = new Date();
-    
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
     const date = now.getDate().toString().padStart(2, '0');
     const month = months[now.getMonth()];
     const year = now.getFullYear(); 
-    
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
-
     const timeString = `${date} ${month} ${year} ${hours}:${minutes}:${seconds}`;
-    
     document.getElementById('date_time').innerHTML = timeString;
 }
 
