@@ -75,7 +75,7 @@
             <section id="tab-reservasi" class="tab-content block">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Data Reservasi</h2>
-                    <button onclick="loadDataReservasi()" class="bg-green-800 text-white px-4 py-2 rounded shadow hover:bg-green-900 transition text-sm font-medium flex items-center">
+                    <button onclick="loadDataReservasi()" class="bg-green-800 text-white px-4 py-2 rounded shadow hover:bg-green-900 transition text-sm font-medium flex items-center" id="btn-refresh-reservasi">
                         <span class="mr-2">↻</span> Refresh Data
                     </button>
                 </div>
@@ -94,17 +94,8 @@
                             </tr>
                         </thead>
                         <tbody id="tabel-reservasi-body">
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="p-4 text-sm text-gray-600">RESV-1715000000</td>
-                                <td class="p-4 text-sm font-medium text-gray-900">Budi Santoso</td>
-                                <td class="p-4 text-sm text-gray-600">081234567890</td>
-                                <td class="p-4 text-sm text-gray-900">2026-05-12</td>
-                                <td class="p-4 text-sm text-gray-500 max-w-xs truncate" title="Pegal linu di area leher dan punggung">Pegal linu di area leher...</td>
-                                <td class="p-4 text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">Menunggu</span></td>
-                                <td class="p-4 text-sm space-x-2">
-                                    <button class="text-green-600 hover:text-green-800 font-medium transition">Selesai</button>
-                                    <button class="text-red-600 hover:text-red-800 font-medium transition">Batal</button>
-                                </td>
+                            <tr>
+                                <td colspan="7" class="p-4 text-center text-gray-500">Memuat data reservasi...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -118,7 +109,6 @@
                         + Tulis Artikel Baru
                     </button>
                 </div>
-
                 <div class="bg-white rounded-lg shadow-md overflow-x-auto border border-gray-100">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
@@ -129,14 +119,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabel-artikel-body">
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="p-4 text-sm font-medium text-gray-900">Manfaat Bekam Rutin Sebulan Sekali</td>
-                                <td class="p-4 text-sm text-gray-500">01 Mei 2026</td>
-                                <td class="p-4 text-sm space-x-3">
-                                    <button class="text-blue-600 hover:text-blue-800 font-medium transition">Edit</button>
-                                    <button class="text-red-600 hover:text-red-800 font-medium transition">Hapus</button>
-                                </td>
-                            </tr>
+                            <tr><td colspan="3" class="p-4 text-center text-gray-500">Fitur CMS Artikel akan disinkronkan.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -149,7 +132,6 @@
                         + Tambah Barang
                     </button>
                 </div>
-
                 <div class="bg-white rounded-lg shadow-md overflow-x-auto border border-gray-100">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
@@ -161,22 +143,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabel-stok-body">
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="p-4 text-sm font-medium text-gray-900">Jarum Bekam 21G</td>
-                                <td class="p-4 text-sm font-bold text-red-600">12 Box</td>
-                                <td class="p-4 text-sm"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">Menipis</span></td>
-                                <td class="p-4 text-sm">
-                                    <button class="text-blue-600 hover:text-blue-800 font-medium transition">Update Stok</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="p-4 text-sm font-medium text-gray-900">Minyak Zaitun 500ml</td>
-                                <td class="p-4 text-sm font-bold text-green-600">45 Botol</td>
-                                <td class="p-4 text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Aman</span></td>
-                                <td class="p-4 text-sm">
-                                    <button class="text-blue-600 hover:text-blue-800 font-medium transition">Update Stok</button>
-                                </td>
-                            </tr>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Fitur Manajemen Stok akan disinkronkan.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -186,7 +153,7 @@
     </main>
 
     <script>
-        // GANTI INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // URL Web App GAS Anda
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0UPb8fuwA8PqaqFgpjOjgsyDbCsFO_TGci1pILKwYcndfxRZLIIOyqu4HqnHdSVqe7w/exec'; 
 
         // Fungsi berpindah Tab
@@ -227,19 +194,16 @@
                 const result = await response.json();
 
                 if (result.status === 'success' && result.data.role === 'admin') {
-                    // Simpan status di browser
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('adminName', result.data.nama);
                     
-                    // Update UI Dashboard
                     document.getElementById('admin-name-display').innerText = result.data.nama;
                     document.getElementById('admin-login-overlay').classList.add('hidden');
                     document.getElementById('sidebar-admin').classList.remove('hidden');
                     document.getElementById('sidebar-admin').classList.add('flex');
                     document.getElementById('main-admin').classList.remove('hidden');
                     
-                    // Ambil data dari Sheets saat pertama kali login
-                    loadDataReservasi();
+                    loadDataReservasi(); // Tarik data saat login berhasil
                 } else {
                     errorMsg.innerText = "Akses ditolak. Email/Password salah atau Anda bukan Admin.";
                     errorMsg.classList.remove('hidden');
@@ -247,7 +211,6 @@
             } catch (error) {
                 errorMsg.innerText = "Terjadi kesalahan saat terhubung ke server.";
                 errorMsg.classList.remove('hidden');
-                console.error("Login Error: ", error);
             } finally {
                 btn.innerText = 'Masuk ke Dashboard';
                 btn.disabled = false;
@@ -266,8 +229,7 @@
                 document.getElementById('sidebar-admin').classList.add('flex');
                 document.getElementById('main-admin').classList.remove('hidden');
                 
-                // Jika sudah login, langsung muat data
-                loadDataReservasi();
+                loadDataReservasi(); // Tarik data jika sesi masih aktif
             }
         };
 
@@ -275,13 +237,61 @@
         function logoutAdmin() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('adminName');
-            location.reload(); // Refresh halaman agar kembali ke layar login
+            location.reload(); 
         }
 
-        // Fungsi Load Data (Placeholder untuk dihubungkan dengan doGet di Apps Script)
+        // Fungsi Tarik Data dari Spreadsheet
         async function loadDataReservasi() {
-            console.log("Memuat data reservasi dari Google Sheets...");
-            // Logika fetch data dari Google Sheets akan diletakkan di sini nantinya
+            const tbody = document.getElementById('tabel-reservasi-body');
+            const btnRefresh = document.getElementById('btn-refresh-reservasi');
+            
+            const originalBtnText = btnRefresh.innerHTML;
+            btnRefresh.innerHTML = '<span class="mr-2">↻</span> Memuat...';
+            btnRefresh.disabled = true;
+
+            try {
+                const response = await fetch(SCRIPT_URL + "?action=getReservasi");
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const dataReservasi = result.data;
+                    tbody.innerHTML = ''; 
+
+                    if (dataReservasi.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Belum ada data reservasi di Spreadsheet.</td></tr>';
+                        return;
+                    }
+
+                    // Menulis data dari Spreadsheet ke dalam baris Tabel
+                    dataReservasi.forEach(row => {
+                        let statusClass = "bg-yellow-100 text-yellow-800";
+                        if(row.Status && row.Status.toLowerCase().includes('selesai')) statusClass = "bg-green-100 text-green-800";
+                        if(row.Status && row.Status.toLowerCase().includes('batal')) statusClass = "bg-red-100 text-red-800";
+
+                        const tr = document.createElement('tr');
+                        tr.className = "border-b hover:bg-gray-50 transition";
+                        tr.innerHTML = `
+                            <td class="p-4 text-sm text-gray-600">${row.ID_Reservasi || '-'}</td>
+                            <td class="p-4 text-sm font-medium text-gray-900">${row.Nama_Kustomer || '-'}</td>
+                            <td class="p-4 text-sm text-gray-600">${row.No_HP || '-'}</td>
+                            <td class="p-4 text-sm text-gray-900">${row.Tanggal_Terapi || '-'}</td>
+                            <td class="p-4 text-sm text-gray-500 max-w-xs truncate" title="${row.Keluhan || ''}">${row.Keluhan || '-'}</td>
+                            <td class="p-4 text-sm"><span class="${statusClass} px-2 py-1 rounded text-xs font-semibold">${row.Status || 'Menunggu'}</span></td>
+                            <td class="p-4 text-sm space-x-2">
+                                <button class="text-green-600 hover:text-green-800 font-medium transition" onclick="alert('Ubah status selesai untuk ID: ${row.ID_Reservasi}')">Selesai</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Gagal memuat data: ${result.message}</td></tr>`;
+                }
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Gagal terhubung ke server. Pastikan GAS sudah di-deploy ulang.</td></tr>';
+            } finally {
+                btnRefresh.innerHTML = originalBtnText;
+                btnRefresh.disabled = false;
+            }
         }
     </script>
 </body>
