@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artikel - Rumah Bekam Monggang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { green: { 800: '#1e3f20', 900: '#142c16' }, gold: { 500: '#d4af37', 600: '#b5952f' } } } }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-green-900 text-white sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="font-bold text-xl tracking-wider text-gold-500">BEKAM MONGGANG</a>
+                <div class="hidden md:flex space-x-4">
+                    <a href="index.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Beranda</a>
+                    <a href="layanan.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Layanan</a>
+                    <a href="artikel.html" class="text-gold-500 px-3 py-2 font-medium transition border-b-2 border-gold-500">Artikel</a>
+                    <a href="kontak.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Kontak</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-bold text-green-900">Edukasi & Artikel Kesehatan</h1>
+                <p class="text-gray-600 mt-2">Temukan berbagai informasi bermanfaat seputar pengobatan alami.</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <input type="text" placeholder="Cari artikel..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-800 w-full md:w-64">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="article-list">
+            
+            <article class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden border border-gray-100">
+                <img src="https://via.placeholder.com/400x200?text=Gambar+Artikel" alt="Artikel" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-gold-600 uppercase tracking-wider">Tips Kesehatan</span>
+                    <h3 class="font-bold text-xl text-green-900 mt-2 mb-3">Manfaat Rutin Bekam Sebulan Sekali</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">Membekam pada titik-titik tertentu dapat merangsang sistem imun tubuh dan membuang zat-zat tidak berguna yang terjebak di bawah kulit...</p>
+                    <a href="#" class="text-green-800 font-semibold hover:text-gold-600 transition">Baca Selengkapnya &rarr;</a>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden border border-gray-100">
+                <img src="https://via.placeholder.com/400x200?text=Gambar+Artikel" alt="Artikel" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-gold-600 uppercase tracking-wider">Gaya Hidup</span>
+                    <h3 class="font-bold text-xl text-green-900 mt-2 mb-3">Makanan yang Baik Dikonsumsi Setelah Terapi</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">Setelah melakukan terapi bekam, tubuh membutuhkan nutrisi spesifik untuk mempercepat pemulihan sel. Kurma dan madu adalah...</p>
+                    <a href="#" class="text-green-800 font-semibold hover:text-gold-600 transition">Baca Selengkapnya &rarr;</a>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <a href="https://wa.me/62816847468" target="_blank" aria-label="Chat WhatsApp" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#25D366] text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl hover:bg-green-600 transform transition hover:-translate-y-2 z-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.93 7.93 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.538a6.27 6.27 0 0 1-3.182-.86l-.228-.135-2.364.62.63-2.302-.148-.235a6.27 6.27 0 0 1-.958-3.321c0-3.46 2.81-6.272 6.27-6.272 1.677 0 3.256.653 4.441 1.84a6.25 6.25 0 0 1 1.84 4.44c-.001 3.457-2.81 6.268-6.265 6.268z"/>
+            <path d="M11.87 9.61c-.32-.16-1.894-.936-2.188-1.042-.294-.107-.508-.16-.722.16-.214.32-.832 1.042-1.02 1.256-.187.214-.375.24-.694.08-.32-.16-1.35-.498-2.573-1.593-.95-.85-1.59-1.9-1.776-2.22-.188-.32-.02-.493.14-.653.14-.14.32-.375.48-.56.16-.188.214-.32.32-.534.106-.214.053-.402-.027-.562-.08-.16-.722-1.74-.99-2.383-.26-.623-.523-.538-.722-.548-.187-.01-.402-.01-.616-.01-.214 0-.56.08-.853.398-.293.32-1.12 1.094-1.12 2.667 0 1.573 1.146 3.094 1.306 3.308.16.214 2.25 3.435 5.45 4.74.767.313 1.365.498 1.833.638.767.23 1.466.197 2.016.12.616-.086 1.894-.775 2.16-1.524.266-.75.266-1.393.187-1.524-.08-.13-.293-.214-.613-.375z"/>
+        </svg>
+    </a>
+</body>
+</html>
