@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak Kami - Rumah Bekam Monggang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { green: { 800: '#1e3f20', 900: '#142c16' }, gold: { 500: '#d4af37', 600: '#b5952f' } } } }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-green-900 text-white sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="font-bold text-xl tracking-wider text-gold-500">BEKAM MONGGANG</a>
+                <div class="hidden md:flex space-x-4">
+                    <a href="index.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Beranda</a>
+                    <a href="layanan.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Layanan</a>
+                    <a href="artikel.html" class="hover:text-gold-500 px-3 py-2 font-medium transition">Artikel</a>
+                    <a href="kontak.html" class="text-gold-500 px-3 py-2 font-medium transition border-b-2 border-gold-500">Kontak</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 w-full">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-green-900 mb-4">Hubungi Kami</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Kami siap melayani Anda. Silakan hubungi kami untuk pertanyaan lebih lanjut atau membuat jadwal reservasi.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white p-8 rounded-xl shadow-md border border-gray-100">
+            
+            <div>
+                <h2 class="text-2xl font-bold text-green-900 mb-6">Informasi Klinik</h2>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-full text-green-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Alamat</h3>
+                            <p class="text-gray-600 mt-1">Jl. Monggang No. 123, Kelurahan Sehat, Kecamatan Bugar, Kota Kesehatan 40123</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-full text-green-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Telepon / WhatsApp</h3>
+                            <p class="text-gray-600 mt-1">+62 812-3456-7890</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-full text-green-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Jam Operasional</h3>
+                            <p class="text-gray-600 mt-1">Senin - Sabtu: 09.00 - 17.00 WIB<br>Minggu: Libur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-full min-h-[300px] bg-gray-200 rounded-lg overflow-hidden relative">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126907.08643878199!2d106.74104279762696!3d-6.229728024220551!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTMnNDcuMCJTIDEwNsKwNDQnMjcuOCJF!5e0!3m2!1sid!2sid!4v1620000000000!5m2!1sid!2sid" width="100%" height="100%" style="border:0; position: absolute; top:0; left:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+        </div>
+    </main>
+
+    <a href="https://wa.me/62816847468" target="_blank" aria-label="Chat WhatsApp" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#25D366] text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl hover:bg-green-600 transform transition hover:-translate-y-2 z-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.93 7.93 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.538a6.27 6.27 0 0 1-3.182-.86l-.228-.135-2.364.62.63-2.302-.148-.235a6.27 6.27 0 0 1-.958-3.321c0-3.46 2.81-6.272 6.27-6.272 1.677 0 3.256.653 4.441 1.84a6.25 6.25 0 0 1 1.84 4.44c-.001 3.457-2.81 6.268-6.265 6.268z"/>
+            <path d="M11.87 9.61c-.32-.16-1.894-.936-2.188-1.042-.294-.107-.508-.16-.722.16-.214.32-.832 1.042-1.02 1.256-.187.214-.375.24-.694.08-.32-.16-1.35-.498-2.573-1.593-.95-.85-1.59-1.9-1.776-2.22-.188-.32-.02-.493.14-.653.14-.14.32-.375.48-.56.16-.188.214-.32.32-.534.106-.214.053-.402-.027-.562-.08-.16-.722-1.74-.99-2.383-.26-.623-.523-.538-.722-.548-.187-.01-.402-.01-.616-.01-.214 0-.56.08-.853.398-.293.32-1.12 1.094-1.12 2.667 0 1.573 1.146 3.094 1.306 3.308.16.214 2.25 3.435 5.45 4.74.767.313 1.365.498 1.833.638.767.23 1.466.197 2.016.12.616-.086 1.894-.775 2.16-1.524.266-.75.266-1.393.187-1.524-.08-.13-.293-.214-.613-.375z"/>
+        </svg>
+    </a>
+</body>
+</html>
